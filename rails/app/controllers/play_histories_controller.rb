@@ -1,0 +1,79 @@
+class PlayHistoriesController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+  before_action :set_play_history, only: [:show, :edit, :update, :destroy]
+
+  # GET /play_histories
+  # GET /play_histories.json
+  def index
+    @play_histories = PlayHistory.all
+  end
+
+  # GET /play_histories/1
+  # GET /play_histories/1.json
+  def show
+  end
+
+  # GET /play_histories/new
+  def new
+    @play_history = PlayHistory.new
+  end
+
+  # GET /play_histories/1/edit
+  def edit
+  end
+
+  # POST /play_histories
+  # POST /play_histories.json
+  def create
+    if params[:play_history] && params[:play_history][:code]
+      audio = Audio.find_by_code(params[:play_history][:code])
+      params[:play_history][:audio_id] = audio.id
+    end   
+    @play_history = PlayHistory.new(play_history_params)
+
+    respond_to do |format|      	       
+      if @play_history.save
+        format.html { redirect_to @play_history, notice: 'Play history was successfully created.' }
+        format.json { render :show, status: :created, location: @play_history }
+      else
+        format.html { render :new }
+        format.json { render json: @play_history.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /play_histories/1
+  # PATCH/PUT /play_histories/1.json
+  def update
+    respond_to do |format|
+      if @play_history.update(play_history_params)
+        format.html { redirect_to @play_history, notice: 'Play history was successfully updated.' }
+        format.json { render :show, status: :ok, location: @play_history }
+      else
+        format.html { render :edit }
+        format.json { render json: @play_history.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /play_histories/1
+  # DELETE /play_histories/1.json
+  def destroy
+    @play_history.destroy
+    respond_to do |format|
+      format.html { redirect_to play_histories_url }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_play_history
+      @play_history = PlayHistory.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def play_history_params
+      params.require(:play_history).permit(:audio_id, :user_id, :data)
+    end
+end

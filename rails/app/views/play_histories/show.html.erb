@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Audio:</strong>
+  <%= @play_history.audio_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @play_history.user_id %>
+</p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @play_history.data %>
+</p>
+
+<%= link_to 'Edit', edit_play_history_path(@play_history) %> |
+<%= link_to 'Back', play_histories_path %>
